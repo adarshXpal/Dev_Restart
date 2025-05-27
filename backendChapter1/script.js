@@ -1,42 +1,18 @@
-const fs=require('fs');
+const express = require('express');
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.get("/", (req, res) => {
+  res.send("Checking the express package !!");
+})
+app.get("/Home", (req, res, next) => {
+  res.send("You are in Home Page !!");
+})
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(403).send("Teri Maa ka ai ai yoo");
+})
+app.listen(3000, () => {
+  console.log("Running on Port 3000");
+});
 
-fs.writeFile("hello.txt","Hey Hello Hola Amigo",(err)=>{
-  if(err) console.log(err);
-  else console.log("Done");
-})
-fs.appendFile("hello.txt"," Bhot badiya aunty",(err)=>{
-  if(err) console.log(err);
-  else console.log("Done Again");
-})
-
-fs.rename("./hello.txt","changehello.txt",(err)=>{
-  if(err)console.log(err);
-  else console.log("Done rename");
-})
-fs.copyFile("./changehello.txt","./copy/copy.txt",(err)=>{
-  if(err)console.log(err.message);
-  else console.log("File Copied !!");
-})
-fs.unlink("./copy/copy.txt",(err)=>{
-  if(err)console.log(err);
-  else console.log("Removed !!");
-// })
-fs.rm("./copy",{recursive:true},(err)=>{
-  if(err)console.log(err.message);
-  else console.log("Directory Removed !!")
-})
-fs.mkdir("./copy",(err)=>{
-  if(err) console.error(err.message);
-  else console.log("Copy folder created !!");
-
-})
-fs.readFile("./changehello.txt",(err,data)=>{
-  if(err)console.error(err);
-  else console.log(data);
-  
-})
-fs.rm("./changehello.txt",(err)=>{
-  if(err)console.error(err.message);
-  else console.log("File Removed !!");
-  
-})
