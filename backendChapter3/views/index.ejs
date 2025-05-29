@@ -12,8 +12,8 @@
       <div class="form p-10 text-white">
         <form action="/create" method="post">
           <input class="block w-full rounded-md outline-none px-5 py-2 bg-zinc-800" type="text" placeholder="Title goes here" name="title"> 
-          <textarea class="block w-full rounded-md mt-2 px-5 outline-none py-2 resize-none bg-zinc-800" placeholder="Write down your tasks !!" name="details"></textarea>
-          <input class="mt-2 bg-blue-600 px-5 py-2 rounded-md" type="submit" value="Create Task">
+          <textarea class="block w-full rounded-md mt-3 px-5 outline-none py-2 resize-none bg-zinc-800" placeholder="Write down your tasks !!" name="details"></textarea>
+          <input class="mt-4 bg-blue-600 px-5 py-2 rounded-md" type="submit" value="Create Task">
         </form>
       </div>
       <div class="tasks p-10 flex gap-3 flex-wrap">
@@ -21,7 +21,10 @@
             <% dirfiles.forEach((val)=>{ %>
                 <div class="task w-72 px-3 py-4 bg-zinc-800 rounded-md">
           <h1 class="text-white text-3xl tracking-tighter"><%=val%></h1> 
-          <a class="text-blue-500 inline-block mt-3" href="/file/<%=val%>">Read More..</a>
+          <div class="flex w-full justify-between items-center mt-3">
+             <a class="text-blue-500 inline-block" href="/file/<%=val%>">Read More..</a>
+             <a class="text-zinc-500" href="/edit/<%=val%>">Edit filename</a>
+           </div> 
          </div> 
             <% })%>
         <% } else{ %>
