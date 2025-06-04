@@ -26,9 +26,9 @@ app.get("/logout", (req, res) => {
   res.cookie("MYtoken", "");
   res.redirect("/login");
 })
-app.get("/profile", isLoggedIn, (req, res) => {
-  console.log(`${req.user.email} ${req.user.userid}`);
-  res.send("You have opened a profile page");
+app.get("/profile", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email }).populate("posts");
+  res.render("profile", { user });
 })
 
 app.post("/login", async (req, res) => {
@@ -39,9 +39,9 @@ app.post("/login", async (req, res) => {
   }
   bcrypt.compare(password, user.password, (err, result) => {
     if (result) {
-      let token = jwt.sign({ email: email, userid: user._id }, "shah");
+      let token = jwt.sign({ email: email, userid: user._id }, "shah", { expiresIn: "1h" });
       res.cookie("Mytoken", token);
-      res.send("You have been Logged In!!");
+      res.redirect("/profile");
     } else {
       res.status(400).send("Something went wrong !!");
     }
@@ -63,26 +63,37 @@ app.post("/register", async (req, res) => {
           age,
           password: hash
         });
-        let token = jwt.sign({ email: email, userid: createdUser._id }, "shah");
+        let token = jwt.sign({ email: email, userid: createdUser._id }, "shah", { expiresIn: "1h" });
         res.cookie("Mytoken", token);
-        res.send("registered !!");
+        res.redirect("/profile");
       })
     })
   }
 })
 
+app.post("/post", isLoggedIn, async (req, res) => {
+  let user = await userModel.findOne({ email: req.user.email });
+  let { content } = req.body;
+  let post = await postModel.create({
+    user: user._id,
+    content: content,
+  });
+  user.posts.push(post._id);
+  await user.save();
+  res.redirect("/profile");
+});
 
 
 function isLoggedIn(req, res, next) {
   let token = req.cookies.Mytoken;
-  if (!token) return res.status(401).send("User must login!");
+  if (!token) {
+    res.redirect("/login");
+  }
   jwt.verify(token, "shah", (err, result) => {
-    if (err) {
-      return res.status(401).send("Invalid or expired token!");
-    }
+    if (err) res.status(400).send("Invalid token !!");
     req.user = result;
     next();
-  });
+  })
 }
 
 
