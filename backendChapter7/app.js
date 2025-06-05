@@ -30,7 +30,25 @@ app.get("/profile", isLoggedIn, async (req, res) => {
   let user = await userModel.findOne({ email: req.user.email }).populate("posts");
   res.render("profile", { user });
 })
+app.get("/like/:id", isLoggedIn, async (req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id }).populate("user");
+  if (post.likes.indexOf(req.user.userid) === -1) {
+    post.likes.push(req.user.userid);
+  } else {
+    post.likes.splice(post.likes.indexOf(req.user.userid), 1);
+  }
+  await post.save();
+  res.redirect("/profile");
+})
+app.get("/edit/:id", isLoggedIn, async (req, res) => {
+  let post = await postModel.findOne({ _id: req.params.id });
+  res.render("edit", { post });
+})
 
+app.post("/edit/:id", isLoggedIn, async (req, res) => {
+  let updatedPost = await postModel.findOneAndUpdate({ _id: req.params.id }, { content: req.body.content });
+  res.redirect("/profile");
+})
 app.post("/login", async (req, res) => {
   let { email, password } = req.body;
   let user = await userModel.findOne({ email });
@@ -52,7 +70,7 @@ app.post("/register", async (req, res) => {
   let { name, username, email, password, age } = req.body;
   let user = await userModel.findOne({ email });
   if (user) {
-    res.status(500).send("Hey user exist !! Login.");
+    res.redirect("/login");
   } else {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(password, salt, async (err, hash) => {
@@ -89,9 +107,9 @@ function isLoggedIn(req, res, next) {
   if (!token) {
     res.redirect("/login");
   }
-  jwt.verify(token, "shah", (err, result) => {
+  jwt.verify(token, "shah", (err, decoded) => {
     if (err) res.status(400).send("Invalid token !!");
-    req.user = result;
+    req.user = decoded;
     next();
   })
 }
