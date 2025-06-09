@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
-const DB = "mongodb://localhost:27017/scatch";
+const config = require("config");
+const dbgr = require("debug")("development:mongoose");
+const DB = `${config.get("MONGODB_URI")}/scatch`;
 mongoose
   .connect(DB)
   .then(() => {
-    console.log("MongoDB is connected !!");
+    dbgr("Connected with DataBase");
   })
   .catch((err) => {
-    console.log(err);
+    dbgr(err);
   })
 
 module.exports = mongoose.connection;

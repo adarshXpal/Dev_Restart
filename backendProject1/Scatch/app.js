@@ -3,7 +3,7 @@ const app = express();
 
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const PORT = 3000;
+const config = require("config");
 const DB = require("./config/mongoose.connection");
 // Models.....
 const userModel = require("./models/user.model");
@@ -27,6 +27,6 @@ app.get("/", (req, res) => {
   res.send("Hey");
 });
 
-app.listen(PORT, (err) => {
-  console.log(`Running server on PORT: ${PORT}`);
+app.listen(config.get("PORT"), (err) => {
+  console.log(`Running server on PORT: ${config.get("PORT")}`);
 })
