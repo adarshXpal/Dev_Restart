@@ -1,0 +1,20 @@
+{
+  "name": "airlinebooking",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "adarshXpal",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev":"npx nodemon src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.1.0",
+    "express": "^5.1.0",
+    "http-status-codes": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
