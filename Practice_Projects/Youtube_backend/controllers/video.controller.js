@@ -1,40 +1,44 @@
 const Video = require("../models/Video.model");
-const videoController = async (req, res) => {
 
-  const { title, description, isPublic } = req.body;
-  const videoUrl = req.files?.video[0]?.path || req.file?.path;
-  const thumbnailUrl = req.files?.thumbnail[0]?.path || req.file?.path;
-  if (!videoUrl || !thumbnailUrl) {
-    res.status(403).json({
-      message: "Somethings wrong with cloud"
-    });
-  }
+const videoController = async (req, res) => {
   try {
+    const { title, description, isPublic } = req.body;
+    const videoFile = req.files?.video?.[0];
+    const thumbnailFile = req.files?.thumbnail?.[0];
+
+    if (!videoFile || !thumbnailFile) {
+      return res.status(400).json({
+        message: "Video or thumbnail file is missing."
+      });
+    }
+
+    const videoUrl = videoFile.path;
+    const thumbnailUrl = thumbnailFile.path;
     const newVideo = await Video.create({
       title,
       description,
       videoUrl,
       thumbnailUrl,
+      isPublic: isPublic === "true",
       uploadedBy: req.user.userId
-    })
+    });
+
     if (newVideo) {
       return res.status(201).json({
-        message: "Video uploaded successfully"
-      })
+        message: "Video uploaded successfully",
+        data: newVideo
+      });
     } else {
-      console.log("fadjfak:wrong");
-
+      return res.status(500).json({
+        message: "Failed to save video to database"
+      });
     }
-    return res.status(401).json({
-      message: "New video not uploaded"
-    })
-
   } catch (error) {
-    console.log(error);
-    res.status(400).json({
-      message: "Something went wrong !!"
-    })
+    console.error(error);
+    return res.status(500).json({
+      message: "Something went wrong!"
+    });
   }
-}
+};
 
 module.exports = { videoController };
