@@ -23,18 +23,8 @@ const videoSchema = new mongoose.Schema({
     required: true,
     ref: "User"
   },
-  views: {
-    type: Number,
-    default: 0
-  },
-  likesCount: {
-    type: Number,
-    default: 0
-  },
-  dislikeCount: {
-    type: Number,
-    default: 0
-  },
+  views: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+  likes: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   isPublic: {
     type: Boolean,
     default: true

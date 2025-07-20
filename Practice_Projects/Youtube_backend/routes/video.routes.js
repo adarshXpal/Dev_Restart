@@ -15,4 +15,11 @@ videoRouter.post(
   controller.videoController.videoController
 );
 
+videoRouter.get("/", controller.videoController.getAllPublicVideos);
+videoRouter.get("/:id", controller.videoController.getVideoById);
+videoRouter.get("/user/:userId", controller.videoController.getVideosOfUser);
+videoRouter.post("/:id/watch", authenticate, controller.videoController.watchVideo);
+videoRouter.post("/:id/like", authenticate, controller.videoController.likeVideo);
+
+
 module.exports = videoRouter;

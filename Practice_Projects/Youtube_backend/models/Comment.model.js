@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const { applyTimestamps } = require("./Video.model");
 
-const commentSchema = mongoose.Schema({
+
+const commentSchema = new mongoose.Schema({
   text: {
     type: String,
     required: true,
@@ -17,13 +17,11 @@ const commentSchema = mongoose.Schema({
     ref: "Video",
     required: true
   },
-  likeCount: {
-    type: Number,
-    default: 0
-  },
+  likes: [{ type: mongoose.Types.ObjectId, ref: "User" }],
   parentComment: {
     type: mongoose.Types.ObjectId,
-    ref: "Comment"
+    ref: "Comment",
+    default: null
   }
 }, {
   timestamps: true
