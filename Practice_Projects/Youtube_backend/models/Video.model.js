@@ -10,13 +10,12 @@ const videoSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  videoUrl: {
+  hlsUrl: {
     type: String,
     required: true
   },
   thumbnailUrl: {
-    type: String,
-    required: true
+    type: String
   },
   uploadedBy: {
     type: mongoose.Types.ObjectId,

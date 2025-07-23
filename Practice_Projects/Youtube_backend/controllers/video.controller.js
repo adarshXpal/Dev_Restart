@@ -1,50 +1,47 @@
 const Video = require("../models/Video.model");
 const User = require("../models/User.model");
-const { memoryStorage } = require("multer");
+const transcodeToHLS = require("../utils/transcodeToHLS");
+const path = require("path");
+const fs = require("fs-extra");
+const PORT = process.env.PORT || 5000;
 
-const videoController = async (req, res) => {
+const uploadVideo = async (req, res) => {
   try {
-    const { title, description, isPublic } = req.body;
-    const videoFile = req.files?.video?.[0];
-    const thumbnailFile = req.files?.thumbnail?.[0];
-    const { userId } = req.user;
+    const { title, description } = req.body;
+    const userId = req.user.userId;
 
-    if (!videoFile || !thumbnailFile) {
-      return res.status(400).json({
-        message: "Video or thumbnail file is missing."
-      });
+    const videoFile = req.files["video"]?.[0];
+    const thumbnailFile = req.files["thumbnail"]?.[0];
+
+    if (!videoFile) {
+      return res.status(400).json({ message: "Video file is required" });
     }
 
-    const videoUrl = videoFile.path;
-    const thumbnailUrl = thumbnailFile.path;
+    const videoId = path.parse(videoFile.filename).name;
+
+    const hdfsPath = await transcodeToHLS(videoFile.path, videoId);
+
+    const hlsUrl = `http://localhost:${PORT}/api/stream/${videoId}/index.m3u8`;
+
+    const thumbnailUrl = thumbnailFile
+      ? `/uploads/thumbnails/${thumbnailFile.filename}`
+      : "";
+
     const newVideo = await Video.create({
       title,
       description,
-      videoUrl,
+      hlsUrl,
       thumbnailUrl,
-      isPublic: isPublic === "true",
-      uploadedBy: req.user.userId
+      uploadedBy: userId,
     });
-    const user = await User.findById(userId);
-    user.uploadedVideos.push(newVideo._id);
-    await user.save();
 
-    if (newVideo) {
-      return res.status(201).json({
-        message: "Video uploaded successfully",
-        userVideos: user.uploadedVideos,
-        data: newVideo
-      });
-    } else {
-      return res.status(500).json({
-        message: "Failed to save video to database"
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Something went wrong!"
+    return res.status(201).json({
+      message: "Video uploaded and processed successfully",
+      video: newVideo,
     });
+  } catch (err) {
+    console.error("Upload Error:", err);
+    return res.status(500).json({ message: "Failed to upload video" });
   }
 };
 
@@ -185,4 +182,4 @@ const likeVideo = async (req, res) => {
   }
 }
 
-module.exports = { videoController, getVideoById, getAllPublicVideos, getVideosOfUser, watchVideo, likeVideo };
+module.exports = { uploadVideo, getVideoById, getAllPublicVideos, getVideosOfUser, watchVideo, likeVideo };
