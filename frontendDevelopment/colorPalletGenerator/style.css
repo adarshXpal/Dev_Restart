@@ -1,0 +1,150 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto;
+}
+
+body {
+    background: linear-gradient(135deg, #83a8df, #c3cfe2);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.container {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+h1{
+
+} */
+/* Reset & base styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Main container */
+.container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 700px;
+  max-width: 90%;
+  text-align: center;
+}
+
+/* Heading */
+.container h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.container h1::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: #7a5af5;
+  margin: 8px auto 0;
+  border-radius: 5px;
+}
+
+/* Generate button */
+#generate-btn {
+  background: linear-gradient(90deg, #7a5af5, #b64cf4);
+  border: none;
+  padding: 12px 22px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-bottom: 25px;
+}
+#generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(102, 126, 234, 0.3);
+}
+
+#generate-btn:active {
+  transform: translateY(0);
+}
+
+/* Pallete container */
+.pallete-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+/* Each color box */
+.color-box {
+  background: #f9f9f9;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.color-box:hover {
+  transform: translateY(-5px);
+}
+
+/* Color section */
+.color {
+  height: 100px;
+  border-radius: 12px 12px 0 0;
+}
+
+/* Color info (hex + copy icon) */
+.color-info {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+
+.hex-value {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.copy-btn {
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  transition: color 0.2s ease;
+}
+
+.copy-btn:hover {
+  color: #7a5af5;
+}
