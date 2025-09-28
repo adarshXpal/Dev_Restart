@@ -5,7 +5,11 @@ import TodoForm from './components/TodoForm';
 import TodoItem from './components/TodoItem';
 
 function App() {
-  const [todos,setTodos]=useState([]);
+  const [todos,setTodos]=useState([{
+    id: 1758911266421,
+    isCompleted: false,
+    todo: "Done with this note making."
+  }]);
   const addTodo=(todo)=>{
     setTodos((prev)=>[...prev,{id:Date.now(),...todo}]);
   }
@@ -20,9 +24,10 @@ function App() {
   }
 
   useEffect(()=>{
-    const savedTodos=JSON.parse(localStorage.getItem("todos"));
-    if(savedTodos && savedTodos.length>0){
-      setTodos(savedTodos);
+    const todos=JSON.parse(localStorage.getItem("todos"));
+    
+    if(todos && todos.length>0){
+      setTodos(todos);
     }
   },[])
 
